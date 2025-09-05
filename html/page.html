@@ -1,0 +1,56 @@
+{{ template "base" . }}
+<!---->
+{{ define "title" }}
+<title>Главная страница</title>
+{{ end }}
+<!---->
+{{ define "menu" }}
+<style>
+.category-menu {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.category-card {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px 20px;
+    min-width: 120px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-weight: 500;
+    color: #333;
+}
+
+.category-card:hover {
+    background-color: #e8e8e8;
+    border-color: #bbb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<div class="category-menu">
+    {{ range . }}
+    <div class="category-card">{{ .Name }}</div>
+    {{ else }}
+    <p>No categories available</p>
+    {{ end }}
+</div>
+{{ end }}

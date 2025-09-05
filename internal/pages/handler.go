@@ -10,6 +10,10 @@ type HomeHandler struct {
 	router fiber.Router
 }
 
+type Category struct {
+	Name string
+}
+
 func NewHandler(router fiber.Router) {
 	h := &HomeHandler{
 		router: router,
@@ -27,11 +31,33 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		slog.String("ip", c.IP()),
 	)
 
+	// Define categories for the menu
+	categories := []Category{
+		{Name: "Еда"},
+		{Name: "Напитки"},
+		{Name: "Машины"},
+		{Name: "Одежда"},
+		{Name: "Дом"},
+		{Name: "Спорт"},
+		{Name: "Развлечения"},
+		{Name: "Другое"},
+	}
+
 	// Log successful response
 	slog.Info("Home page response sent",
 		slog.String("status", "200"),
-		slog.String("response", "Hi"),
+		slog.String("template", "page"),
+		slog.Int("categories_count", len(categories)),
 	)
 
-	return c.SendString("Hi")
+	// Debug logging
+	for i, cat := range categories {
+		slog.Debug("Category data",
+			slog.Int("index", i),
+			slog.String("name", cat.Name),
+		)
+	}
+
+	// Try simple approach - just pass the slice directly
+	return c.Render("page", categories)
 }

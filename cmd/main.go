@@ -7,6 +7,7 @@ import (
 	"nkpro/gotempl/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html/v2"
 	slogfiber "github.com/samber/slog-fiber"
 )
 
@@ -38,7 +39,11 @@ func main() {
 		slog.String("url", dbConf.Url),
 	)
 
-	app := fiber.New()
+	engine := html.New("./html", ".html")
+
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
 
 	// Add slog-fiber middleware for HTTP request logging
 	app.Use(slogfiber.New(appLogger.Logger))
