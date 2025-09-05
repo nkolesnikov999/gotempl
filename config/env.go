@@ -51,3 +51,35 @@ func NewDatabaseConfig() *DatabaseConfig {
 		Url: getString("DATABASE_URL", ""),
 	}
 }
+
+// GetLogLevel returns the log level from environment variable LOG_LEVEL
+// Default is "info" if not set or invalid
+func GetLogLevel() string {
+	level := getString("LOG_LEVEL", "info")
+	validLevels := map[string]bool{
+		"debug": true,
+		"info":  true,
+		"warn":  true,
+		"error": true,
+	}
+
+	if !validLevels[level] {
+		return "info"
+	}
+	return level
+}
+
+// GetLogFormat returns the log format from environment variable LOG_FORMAT
+// Default is "json" if not set or invalid
+func GetLogFormat() string {
+	format := getString("LOG_FORMAT", "json")
+	validFormats := map[string]bool{
+		"json": true,
+		"text": true,
+	}
+
+	if !validFormats[format] {
+		return "json"
+	}
+	return format
+}
