@@ -1,0 +1,19 @@
+package views
+
+import "nkpro/gotempl/views/components"
+import "nkpro/gotempl/views/layout"
+
+templ Main() {
+	@layout.Layout(layout.LayoutProps{
+		Title: "Жизнь, о которой вы мечтаете",
+		MetaDescription: "Сайт про желания",
+	}) {
+		<main>
+			@layout.Header() {
+			@components.Title("Жизнь, о которой вы мечтаете")
+			@components.SubTitle("Простой поиск работы")
+			}
+			Main
+		</main>
+	}
+}
