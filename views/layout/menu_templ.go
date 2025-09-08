@@ -8,8 +8,6 @@ package layout
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "nkpro/gotempl/views/components"
-
 func Menu() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -35,33 +33,7 @@ func Menu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><img src=\"/public/images/logo.svg\"><div class=\"menu__right\"><a class=\"menu__right-link\">Войти</a>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-			if !templ_7745c5c3_IsBuffer {
-				defer func() {
-					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err == nil {
-						templ_7745c5c3_Err = templ_7745c5c3_BufErr
-					}
-				}()
-			}
-			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span>Зарегистрироваться</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			return nil
-		})
-		templ_7745c5c3_Err = components.LinkButton("/register").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div><div class=\"menu__user\"><img src=\"/public/images/img_user.png\" class=\"menu__avatar\"> <span class=\"menu__username\">Василий</span></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -85,12 +57,12 @@ func MenuStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<style>\n\t\t.menu {\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: space-between;\n\t\t\tpadding: 20px 0;\n\t\t\tmax-width: 1290px;\n\t\t\talign-items: center;\n\t\t\twidth: 100%;\n\t\t}\n\t\n\t\t.menu__right {\n\t\t\tdisplay: flex;\n\t\t\tgap: 20px;\n\t\t\talign-items: center;\n\t\t}\n\t\n\t\t.menu__right-link {\n\t\t\ttext-decoration: none;\n\t\t\tcolor: var(--color-white);\n\t\t\tfont-size: 16px;\n\t\t\tcursor: pointer;\n\t\t}\n\t\n\t\t.menu__right-link:hover {\n\t\t\tcolor: #9f9f9f;\n\t\t}\n\t</style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<style>\n\t\t.menu {\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: space-between;\n\t\t\talign-items: center;\n\t\t\tpadding: 16px 0;\n\t\t\tmax-width: 1290px;\n\t\t\tmargin: 0 auto;\n\t\t\twidth: 100%;\n\t\t}\n\n\t\t.menu__left { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }\n\t\t.menu__logo { height: 24px; }\n\t\t.menu__title { color: #FF4D00; font-weight: 700; font-size: 20px; }\n\n\t\t.menu__nav { display: flex; gap: 24px; }\n\t\t.menu__link { color: #2B2B2B; text-decoration: none; font-size: 14px; }\n\t\t.menu__link--active { color: #FF4D00; font-weight: 600; }\n\n\t\t.menu__actions { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__search { display: flex; align-items: center; padding: 6px 10px; border: 1px solid #E9E9E9; border-radius: 12px; gap: 8px; }\n\t\t.menu__search-input { border: none; outline: none; width: 260px; font-size: 14px; }\n\t\t.menu__search-btn { border: none; background: transparent; cursor: pointer; font-size: 16px; }\n\n\t\t.menu__user { display: flex; align-items: center; gap: 8px; }\n\t\t.menu__avatar { width: 28px; height: 28px; border-radius: 50%; }\n\t\t.menu__username { font-size: 14px; color: #2B2B2B; }\n\t</style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

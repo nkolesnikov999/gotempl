@@ -60,15 +60,7 @@ func Main() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = components.Title("Найди работу своей мечты").Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " ")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = components.SubTitle("Простой поиск работы").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = components.Title("Новости").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -78,15 +70,31 @@ func Main() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Main</main>")
+			templ_7745c5c3_Err = components.Categories([]components.Category{
+				{Title: "Еда", Image: "/public/images/Hashtag_food.svg"},
+				{Title: "Животные", Image: "/public/images/Hashtag_animal.svg"},
+				{Title: "Машины", Image: "/public/images/Hashtag_car.svg"},
+				{Title: "Спорт", Image: "/public/images/Hashtag_sport.svg"},
+				{Title: "Музыка", Image: "/public/images/Hashtag_music.svg"},
+				{Title: "Технологии", Image: "/public/images/Hashtag_technology.svg"},
+				{Title: "Прочее", Image: "/public/images/Hashtag_others.svg"},
+			}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = layout.Footer().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
 		templ_7745c5c3_Err = layout.Layout(layout.LayoutProps{
-			Title:           "Найди работу мечты",
-			MetaDescription: "Сайт по поиску работы мечты",
+			Title:           "Новости",
+			MetaDescription: "Лента новостей",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 func subTitleClass() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`font-size`, "16px")))
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`color`, "#BABABA")))
+	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`color`, "#6b6b6b")))
 	templ_7745c5c3_CSSID := templ.CSSID(`subTitleClass`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,
@@ -45,7 +45,7 @@ func SubTitle(text string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h2 class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,7 +71,7 @@ func SubTitle(text string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h1>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

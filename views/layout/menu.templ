@@ -1,16 +1,27 @@
 package layout
 
-import "nkpro/gotempl/views/components"
-
 templ Menu() {
 	@MenuStyle()
 	<div class="menu">
-		<img src="/public/images/logo.svg" />
-		<div class="menu__right">
-			<a class="menu__right-link">Войти</a>
-			@components.LinkButton("/register") {
-				<span>Зарегистрироваться</span>
-			}
+		<div class="menu__left">
+			<a href="/" class="menu__brand">
+				<span class="menu__title">Новости</span>
+			</a>
+			<nav class="menu__nav">
+				<a href="#" class="menu__link">Категории</a>
+				<a href="#" class="menu__link">Контакты</a>
+				<a href="#" class="menu__link">О Нас</a>
+			</nav>
+		</div>
+		<div class="menu__actions">
+			<div class="menu__search">
+				<input class="menu__search-input" placeholder="Найти Новость" />
+				<button class="menu__search-btn" aria-label="Search">🔍</button>
+			</div>
+			<div class="menu__user">
+				<img src="/public/images/img_user.png" class="menu__avatar" />
+				<span class="menu__username">Василий</span>
+			</div>
 		</div>
 	</div>
 }
@@ -20,27 +31,29 @@ templ MenuStyle() {
 		.menu {
 			display: flex;
 			justify-content: space-between;
-			padding: 20px 0;
-			max-width: 1290px;
 			align-items: center;
+			padding: 16px 0;
+			max-width: 1290px;
+			margin: 0 auto;
 			width: 100%;
 		}
-	
-		.menu__right {
-			display: flex;
-			gap: 20px;
-			align-items: center;
-		}
-	
-		.menu__right-link {
-			text-decoration: none;
-			color: var(--color-white);
-			font-size: 16px;
-			cursor: pointer;
-		}
-	
-		.menu__right-link:hover {
-			color: #9f9f9f;
-		}
+
+		.menu__left { display: flex; align-items: center; gap: 24px; }
+		.menu__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+		.menu__logo { height: 24px; }
+		.menu__title { color: #FF4D00; font-weight: 700; font-size: 20px; }
+
+		.menu__nav { display: flex; gap: 24px; }
+		.menu__link { color: #2B2B2B; text-decoration: none; font-size: 14px; }
+		.menu__link--active { color: #FF4D00; font-weight: 600; }
+
+		.menu__actions { display: flex; align-items: center; gap: 24px; }
+		.menu__search { display: flex; align-items: center; padding: 6px 10px; border: 1px solid #E9E9E9; border-radius: 12px; gap: 8px; }
+		.menu__search-input { border: none; outline: none; width: 260px; font-size: 14px; }
+		.menu__search-btn { border: none; background: transparent; cursor: pointer; font-size: 16px; }
+
+		.menu__user { display: flex; align-items: center; gap: 8px; }
+		.menu__avatar { width: 28px; height: 28px; border-radius: 50%; }
+		.menu__username { font-size: 14px; color: #2B2B2B; }
 	</style>
 }
