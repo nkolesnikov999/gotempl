@@ -82,11 +82,36 @@ func Main() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			templ_7745c5c3_Err = components.Banners([]components.BannerProps{
+				{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."},
+				{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."},
+			}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"margin: 24px auto 40px; max-width: 1290px; display: flex; gap: 24px; flex-wrap: wrap;\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.Card(components.CardProps{
+				Image:       "/public/images/card_1.png",
+				Title:       "Открытие сезона байдарок",
+				Description: "Сегодня был открыт сезон путешествия на байдарках, где вы можете поучаствовать в ...",
+				User:        components.CardUser{Name: "Михаил Аршинов", Avatar: "/public/images/user_1.png", Date: "Август 18 , 2025"},
+				Bookmarked:  false,
+			}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			templ_7745c5c3_Err = layout.Footer().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
