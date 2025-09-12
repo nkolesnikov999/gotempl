@@ -1,0 +1,18 @@
+package components
+
+templ Banners(items []BannerProps) {
+	@BannersStyle()
+	<div class="banners">
+		for _, b := range items {
+			@Banner(b)
+		}
+	</div>
+}
+
+templ BannersStyle() {
+	<style>
+		.banners { display: flex; gap: 24px; flex-wrap: wrap; justify-content: flex-start; width: 100%; max-width: 1290px; margin: 24px auto 0; }
+	</style>
+}
+
+

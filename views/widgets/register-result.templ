@@ -1,0 +1,19 @@
+package widgets
+
+templ RegisterResult(ok bool, msg string) {
+	@RegisterResultStyle()
+	if ok {
+		<div class="register-result register-result--ok">{ msg }</div>
+	} else {
+		<div class="register-result register-result--err">{ msg }</div>
+	}
+}
+
+templ RegisterResultStyle() {
+<style>
+	.register-result { padding: 12px 14px; border-radius: 10px; font-size: 14px; }
+	.register-result--ok { background: #e7f8ee; color: #146c43; }
+	.register-result--err { background: #fde7ea; color: #842029; }
+</style>
+}
+
