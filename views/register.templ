@@ -1,0 +1,20 @@
+package views
+
+import "nkpro/gotempl/views/components"
+import "nkpro/gotempl/views/layout"
+import "nkpro/gotempl/views/widgets"
+
+templ Register() {
+	@layout.Layout(layout.LayoutProps{
+		Title: "Регистрация",
+		MetaDescription: "Страница регистрации",
+	}) {
+		<main>
+			@layout.Header() {
+				@components.Title("Регистрация")
+			}
+			@widgets.RegisterForm()
+			@layout.Footer()
+		</main>
+	}
+}
