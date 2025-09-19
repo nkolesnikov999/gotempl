@@ -2,9 +2,11 @@ package users
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -26,6 +28,10 @@ func (r *PgxRepository) CreateUser(ctx context.Context, user *User) (*User, erro
 	row := r.pool.QueryRow(ctx, query, user.Email, user.Name, user.Password)
 	var u User
 	if err := row.Scan(&u.ID, &u.Email, &u.Name, &u.Password, &u.CreatedAt); err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return nil, ErrEmailAlreadyExists
+		}
 		return nil, fmt.Errorf("scan inserted user: %w", err)
 	}
 	return &u, nil

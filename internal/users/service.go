@@ -21,6 +21,15 @@ func NewService(repo Repository) Service {
 }
 
 func (s *service) Register(ctx context.Context, name, email, password string) (*User, error) {
+	// Pre-check for email uniqueness to return a friendly error before hashing
+	existing, err := s.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, fmt.Errorf("check existing email: %w", err)
+	}
+	if existing != nil {
+		return nil, ErrEmailAlreadyExists
+	}
+
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, fmt.Errorf("hash password: %w", err)
