@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"nkpro/gotempl/config"
 	"nkpro/gotempl/internal/pages"
+	"nkpro/gotempl/internal/users"
+	dbpkg "nkpro/gotempl/pkg/db"
 	"nkpro/gotempl/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
@@ -38,13 +41,28 @@ func main() {
 		slog.String("url", dbConf.Url),
 	)
 
+	// Init DB pool
+	ctx := context.Background()
+	pool, err := dbpkg.NewPool(ctx, dbConf.Url)
+	if err != nil {
+		appLogger.Error("Failed to init DB", slog.String("error", err.Error()))
+		return
+	}
+	defer pool.Close()
+
+	// Init repos/services
+	userRepo := users.NewPgxRepository(pool)
+	userService := users.NewService(userRepo)
+
 	app := fiber.New()
 
 	// Add slog-fiber middleware for HTTP request logging
 	app.Use(slogfiber.New(appLogger.Logger))
 
+	app.Static("/public", "./public")
+
 	// Initialize page handlers
-	pages.NewHandler(app)
+	pages.NewHandler(app, pages.WithUserService(userService))
 
 	appLogger.Info("Server starting",
 		slog.String("port", ":3003"),
