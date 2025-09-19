@@ -1,8 +1,10 @@
 package pages
 
 import (
+	"fmt"
 	"log/slog"
 
+	"nkpro/gotempl/internal/users"
 	"nkpro/gotempl/pkg/tadapter"
 	"nkpro/gotempl/views"
 	"nkpro/gotempl/views/widgets"
@@ -14,12 +16,18 @@ import (
 )
 
 type HomeHandler struct {
-	router fiber.Router
+	router      fiber.Router
+	userService users.Service
 }
 
-func NewHandler(router fiber.Router) {
-	h := &HomeHandler{
-		router: router,
+type Option func(*HomeHandler)
+
+func WithUserService(s users.Service) Option { return func(h *HomeHandler) { h.userService = s } }
+
+func NewHandler(router fiber.Router, opts ...Option) {
+	h := &HomeHandler{router: router}
+	for _, opt := range opts {
+		opt(h)
 	}
 	h.router.Get("/", h.home)
 	h.router.Get("/register", h.register)
@@ -87,7 +95,17 @@ func (h *HomeHandler) apiRegister(c *fiber.Ctx) error {
 		return htmxRender(c.Status(fiber.StatusUnprocessableEntity), widgets.RegisterResult(false, errs.Error()))
 	}
 
-	return htmxRender(c.Status(fiber.StatusOK), widgets.RegisterResult(true, "Регистрация прошла успешно"))
+	if h.userService == nil {
+		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.RegisterResult(false, "Сервис пользователей не инициализирован"))
+	}
+
+	u, err := h.userService.Register(c.UserContext(), form.Name, form.Email, form.Password)
+	if err != nil {
+		slog.Error("register failed", slog.String("error", err.Error()))
+		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.RegisterResult(false, "Ошибка регистрации"))
+	}
+
+	return htmxRender(c.Status(fiber.StatusOK), widgets.RegisterResult(true, fmt.Sprintf("%s", u.Email)))
 }
 
 // htmxRender renders a small component suitable for HTMX swaps
