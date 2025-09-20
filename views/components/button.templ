@@ -1,0 +1,25 @@
+package components
+
+type ButtonProps struct {
+    Type string
+    Class string
+}
+
+templ Button(props ButtonProps) {
+    @ButtonStyle()
+    <button type={props.Type} class={ "btn " + props.Class }>{ children... }</button>
+}
+
+templ ButtonStyle() {
+<style>
+    .btn {
+        padding: 14px 18px;
+        background: #ff4d63;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+</style>
+}
+
