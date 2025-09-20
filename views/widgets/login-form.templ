@@ -6,7 +6,7 @@ templ LoginForm() {
 	@LoginFormStyle()
 	<div class="login-form">
 		@components.SubTitle("Вход на сайт")
-		<div id="login-result"></div>
+        <div id="login-result"></div>
 		<form hx-post="/api/login" hx-trigger="submit" hx-target="#login-result" hx-swap="innerHTML">
 			<div class="login-form__inputs">
 				<div class="login-form__field">

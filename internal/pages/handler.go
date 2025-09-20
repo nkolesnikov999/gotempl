@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"fmt"
 	"log/slog"
 
 	"nkpro/gotempl/internal/users"
@@ -128,7 +127,10 @@ func (h *HomeHandler) apiRegister(c *fiber.Ctx) error {
 		_ = sess.Save()
 	}
 
-	return htmxRender(c.Status(fiber.StatusOK), widgets.RegisterResult(true, fmt.Sprintf("%s", u.Email)))
+	// HTMX redirect to home on success
+	c.Set("HX-Redirect", "/")
+	c.Set("HX-Location", "/")
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 type loginForm struct {
@@ -139,7 +141,7 @@ type loginForm struct {
 func (h *HomeHandler) apiLogin(c *fiber.Ctx) error {
 	var form loginForm
 	if err := c.BodyParser(&form); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Некорректные данные формы")
+		return htmxRender(c.Status(fiber.StatusBadRequest), widgets.LoginResult(false, "Некорректные данные формы"))
 	}
 
 	errs := validate.Validate(
@@ -147,31 +149,34 @@ func (h *HomeHandler) apiLogin(c *fiber.Ctx) error {
 		&validators.StringLengthInRange{Field: form.Password, Name: "Пароль", Min: 6, Max: 100},
 	)
 	if errs.HasAny() {
-		return c.Status(fiber.StatusUnprocessableEntity).SendString(errs.Error())
+		return htmxRender(c.Status(fiber.StatusUnprocessableEntity), widgets.LoginResult(false, errs.Error()))
 	}
 
 	if h.userService == nil {
-		return c.Status(fiber.StatusInternalServerError).SendString("Сервис пользователей не инициализирован")
+		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.LoginResult(false, "Сервис пользователей не инициализирован"))
 	}
 
 	u, err := h.userService.Authenticate(c.UserContext(), form.Email, form.Password)
 	if err != nil {
 		slog.Warn("login failed", slog.String("error", err.Error()))
-		return c.Status(fiber.StatusUnauthorized).SendString("Неверный email или пароль")
+		return htmxRender(c.Status(fiber.StatusUnauthorized), widgets.LoginResult(false, "Неверный email или пароль"))
 	}
 
 	sess, err := h.store.Get(c)
 	if err != nil {
 		slog.Error("session get failed", slog.String("error", err.Error()))
-		return c.Status(fiber.StatusInternalServerError).SendString("Ошибка сессии")
+		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.LoginResult(false, "Ошибка сессии"))
 	}
 	sess.Set("email", u.Email)
 	if err := sess.Save(); err != nil {
 		slog.Error("session save failed", slog.String("error", err.Error()))
-		return c.Status(fiber.StatusInternalServerError).SendString("Ошибка сессии")
+		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.LoginResult(false, "Ошибка сессии"))
 	}
 
-	return c.SendString("OK")
+	// HTMX redirect to home on success
+	c.Set("HX-Redirect", "/")
+	c.Set("HX-Location", "/")
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 func (h *HomeHandler) logout(c *fiber.Ctx) error {
