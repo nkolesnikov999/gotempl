@@ -8,8 +8,12 @@ import (
 	"nkpro/gotempl/internal/users"
 	dbpkg "nkpro/gotempl/pkg/db"
 	"nkpro/gotempl/pkg/logger"
+	"nkpro/gotempl/pkg/middleware"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/storage/postgres/v3"
 	slogfiber "github.com/samber/slog-fiber"
 )
 
@@ -50,6 +54,16 @@ func main() {
 	}
 	defer pool.Close()
 
+	storage := postgres.New(postgres.Config{
+		DB:         pool,
+		Table:      "sessions",
+		Reset:      false,
+		GCInterval: 10 * time.Second,
+	})
+	store := session.New(session.Config{
+		Storage: storage,
+	})
+
 	// Init repos/services
 	userRepo := users.NewPgxRepository(pool)
 	userService := users.NewService(userRepo)
@@ -59,10 +73,12 @@ func main() {
 	// Add slog-fiber middleware for HTTP request logging
 	app.Use(slogfiber.New(appLogger.Logger))
 
+	app.Use(middleware.AuthMiddleware(store))
+
 	app.Static("/public", "./public")
 
 	// Initialize page handlers
-	pages.NewHandler(app, pages.WithUserService(userService))
+	pages.NewHandler(app, store, pages.WithUserService(userService))
 
 	appLogger.Info("Server starting",
 		slog.String("port", ":3003"),

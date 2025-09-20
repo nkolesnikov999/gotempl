@@ -33,7 +33,7 @@ func Menu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div><a href=\"#\" class=\"menu__link\">Вход</a> <a href=\"/register\" class=\"menu__link menu__link--active\">Регистрация</a></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div><a href=\"/login\" class=\"menu__link\">Вход</a> <a href=\"/register\" class=\"menu__link\">Регистрация</a></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

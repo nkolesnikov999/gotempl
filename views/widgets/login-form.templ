@@ -1,0 +1,34 @@
+package widgets
+
+import "nkpro/gotempl/views/components"
+
+templ LoginForm() {
+	@LoginFormStyle()
+	<div class="login-form">
+		@components.SubTitle("Вход на сайт")
+		<div id="login-result"></div>
+		<form hx-post="/api/login" hx-trigger="submit" hx-target="#login-result" hx-swap="innerHTML">
+			<div class="login-form__inputs">
+				<div class="login-form__field">
+					@components.Label("email", "Email")
+					@components.Input(components.InputProps{ Name: "email", Type: "email" })
+				</div>
+				<div class="login-form__field">
+					@components.Label("password", "Пароль")
+					@components.Input(components.InputProps{ Name: "password", Type: "password" })
+				</div>
+			</div>
+			@components.Button(components.ButtonProps{ Type: "submit", Class: "login-form__button" }) { Вход }
+		</form>
+	</div>
+}
+
+templ LoginFormStyle() {
+<style>
+	.login-form { max-width: 600px; width: 100%; margin: 0 auto; }
+	.login-form form { display: flex; flex-direction: column; align-items: center; }
+	.login-form__inputs { width: 100%; display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+	.login-form__field { display: flex; flex-direction: column; gap: 8px; }
+	.login-form__button { padding: 14px 18px; background: #ff4d63; color: #fff; border: none; border-radius: 12px; cursor: pointer; }
+</style>
+}

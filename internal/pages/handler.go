@@ -13,10 +13,12 @@ import (
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gobuffalo/validate/v3/validators"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
 type HomeHandler struct {
 	router      fiber.Router
+	store       *session.Store
 	userService users.Service
 }
 
@@ -24,13 +26,17 @@ type Option func(*HomeHandler)
 
 func WithUserService(s users.Service) Option { return func(h *HomeHandler) { h.userService = s } }
 
-func NewHandler(router fiber.Router, opts ...Option) {
-	h := &HomeHandler{router: router}
+func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
+	h := &HomeHandler{
+		router: router,
+		store:  store,
+	}
 	for _, opt := range opts {
 		opt(h)
 	}
 	h.router.Get("/", h.home)
 	h.router.Get("/register", h.register)
+	h.router.Get("/login", h.login)
 	h.router.Get("/404", h.notFound)
 
 	// API
@@ -58,6 +64,11 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 
 func (h *HomeHandler) register(c *fiber.Ctx) error {
 	component := views.Register()
+	return tadapter.Render(c, component)
+}
+
+func (h *HomeHandler) login(c *fiber.Ctx) error {
+	component := views.Login()
 	return tadapter.Render(c, component)
 }
 
