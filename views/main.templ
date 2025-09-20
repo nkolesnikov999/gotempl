@@ -31,10 +31,23 @@ templ Main(props MainProps) {
 				{Title: "Технологии", Image: "/public/images/Hashtag_technology.svg"},
 				{Title: "Прочее", Image: "/public/images/Hashtag_others.svg"},
 			})
-			@components.Banners([]components.BannerProps{
-				{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."},
-				{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."},
-			})
+			<style>
+				.hero-row { display: flex; gap: 24px; align-items: stretch; width: 100%; max-width: 1290px; margin: 24px auto 0; }
+				.hero-left { width: 744px; display: flex; flex-direction: row; gap: 24px; }
+				.hero-right { flex: 1; min-width: 0; }
+			</style>
+			<div class="hero-row">
+				<div class="hero-left">
+					@components.Banner(components.BannerProps{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."})
+					@components.Banner(components.BannerProps{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."})
+				</div>
+				<div class="hero-right">
+					@components.Slider([]components.SliderItem{
+						{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."},
+						{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."},
+					})
+				</div>
+			</div>
 			<div style="margin: 24px auto 40px; max-width: 1290px; display: flex; gap: 24px; flex-wrap: wrap;">
 				@components.Card(components.CardProps{
 					Image: "/public/images/card_1.png",

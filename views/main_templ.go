@@ -92,14 +92,30 @@ func Main(props MainProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Banners([]components.BannerProps{
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<style>\n\t\t\t\t.hero-row { display: flex; gap: 24px; align-items: stretch; width: 100%; max-width: 1290px; margin: 24px auto 0; }\n\t\t\t\t.hero-left { width: 744px; display: flex; flex-direction: row; gap: 24px; }\n\t\t\t\t.hero-right { flex: 1; min-width: 0; }\n\t\t\t</style><div class=\"hero-row\"><div class=\"hero-left\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.Banner(components.BannerProps{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.Banner(components.BannerProps{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div class=\"hero-right\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.Slider([]components.SliderItem{
 				{Image: "/public/images/banner_1.png", Alt: "Автомобиль баннер", Title: "Как безопасно водить", Description: "Длинный текст про то, как можно безопасно водить автомобиль."},
 				{Image: "/public/images/banner_2.png", Alt: "Музыка баннер", Title: "Создавай музыку!", Description: "Сегодня мы рассмотрим технику быстрого создания музыки за счёт использования..."},
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"margin: 24px auto 40px; max-width: 1290px; display: flex; gap: 24px; flex-wrap: wrap;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div style=\"margin: 24px auto 40px; max-width: 1290px; display: flex; gap: 24px; flex-wrap: wrap;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -113,7 +129,7 @@ func Main(props MainProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -121,7 +137,7 @@ func Main(props MainProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</main>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -23,7 +23,11 @@ type HomeHandler struct {
 
 type Option func(*HomeHandler)
 
-func WithUserService(s users.Service) Option { return func(h *HomeHandler) { h.userService = s } }
+func WithUserService(s users.Service) Option {
+	return func(h *HomeHandler) {
+		h.userService = s
+	}
+}
 
 func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
 	h := &HomeHandler{
