@@ -3,13 +3,23 @@ package views
 import "nkpro/gotempl/views/components"
 import "nkpro/gotempl/views/layout"
 
-templ Main() {
+type PageUser struct {
+    Email string
+    Name string
+    Avatar string
+}
+
+type MainProps struct {
+    User PageUser
+}
+
+templ Main(props MainProps) {
 	@layout.Layout(layout.LayoutProps{
 		Title: "Новости",
 		MetaDescription: "Лента новостей",
 	}) {
 		<main>
-			@layout.Header() {
+            @layout.Header(layout.HeaderProps{ Email: props.User.Email, Name: props.User.Name, Avatar: props.User.Avatar }) {
 				@components.Title("Новости")
 			}
 			@components.Categories([]components.Category{

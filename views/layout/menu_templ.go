@@ -8,7 +8,13 @@ package layout
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Menu() templ.Component {
+type MenuProps struct {
+	Email  string
+	Name   string
+	Avatar string
+}
+
+func Menu(props MenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -33,7 +39,87 @@ func Menu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div><a href=\"/login\" class=\"menu__link\">Вход</a> <a href=\"/register\" class=\"menu__link\">Регистрация</a></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if props.Email != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"/logout\" class=\"menu__user\" title=\"Выйти\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if props.Avatar != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<img class=\"menu__avatar\" src=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var2 string
+				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(props.Avatar)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 30, Col: 49}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" alt=\"avatar\"> ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<img class=\"menu__avatar\" src=\"/public/images/user_1.png\" alt=\"avatar\"> ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			if props.Name != "" {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<span class=\"menu__username\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var3 string
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.Name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 35, Col: 47}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span class=\"menu__username\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var4 string
+				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Email)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 37, Col: 48}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</a>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<a href=\"/login\" class=\"menu__link\">Вход</a> <a href=\"/register\" class=\"menu__link\">Регистрация</a>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,12 +143,12 @@ func MenuStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<style>\n\t\t.menu {\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: space-between;\n\t\t\talign-items: center;\n\t\t\tpadding: 16px 0;\n\t\t\tmax-width: 1290px;\n\t\t\tmargin: 0 auto;\n\t\t\twidth: 100%;\n\t\t}\n\n\t\t.menu__left { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }\n\t\t.menu__logo { height: 24px; }\n\t\t.menu__title { color: #FF4D00; font-weight: 700; font-size: 20px; }\n\n\t\t.menu__nav { display: flex; gap: 24px; }\n\t\t.menu__link { color: #2B2B2B; text-decoration: none; font-size: 14px; }\n\t\t.menu__link--active { color: #FF4D00; font-weight: 600; }\n\n\t\t.menu__actions { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__search { display: flex; align-items: center; padding: 6px 10px; border: 1px solid #E9E9E9; border-radius: 12px; gap: 8px; }\n\t\t.menu__search-input { border: none; outline: none; width: 260px; font-size: 14px; }\n\t\t.menu__search-btn { border: none; background: transparent; cursor: pointer; font-size: 16px; }\n\n\t\t.menu__user { display: flex; align-items: center; gap: 8px; }\n\t\t.menu__avatar { width: 28px; height: 28px; border-radius: 50%; }\n\t\t.menu__username { font-size: 14px; color: #2B2B2B; }\n\t</style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<style>\n\t\t.menu {\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: space-between;\n\t\t\talign-items: center;\n\t\t\tpadding: 16px 0;\n\t\t\tmax-width: 1290px;\n\t\t\tmargin: 0 auto;\n\t\t\twidth: 100%;\n\t\t}\n\n\t\t.menu__left { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }\n\t\t.menu__logo { height: 24px; }\n\t\t.menu__title { color: #FF4D00; font-weight: 700; font-size: 20px; }\n\n\t\t.menu__nav { display: flex; gap: 24px; }\n\t\t.menu__link { color: #2B2B2B; text-decoration: none; font-size: 14px; }\n\t\t.menu__link--active { color: #FF4D00; font-weight: 600; }\n\n\t\t.menu__actions { display: flex; align-items: center; gap: 24px; }\n\t\t.menu__search { display: flex; align-items: center; padding: 6px 10px; border: 1px solid #E9E9E9; border-radius: 12px; gap: 8px; }\n\t\t.menu__search-input { border: none; outline: none; width: 260px; font-size: 14px; }\n\t\t.menu__search-btn { border: none; background: transparent; cursor: pointer; font-size: 16px; }\n\n\t\t.menu__user { display: flex; align-items: center; gap: 8px; }\n\t\t.menu__avatar { width: 28px; height: 28px; border-radius: 50%; }\n\t\t.menu__username { font-size: 14px; color: #2B2B2B; }\n\t</style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -41,6 +41,8 @@ func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
 
 	// API
 	h.router.Post("/api/register", h.apiRegister)
+	h.router.Post("/api/login", h.apiLogin)
+	h.router.Get("/logout", h.logout)
 }
 
 func (h *HomeHandler) home(c *fiber.Ctx) error {
@@ -58,17 +60,20 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 		slog.String("response", "Hi"),
 	)
 
-	component := views.Main()
+	user := h.currentUser(c)
+	component := views.Main(views.MainProps{User: user})
 	return tadapter.Render(c, component)
 }
 
 func (h *HomeHandler) register(c *fiber.Ctx) error {
-	component := views.Register()
+	user := h.currentUser(c)
+	component := views.Register(views.RegisterProps{User: user})
 	return tadapter.Render(c, component)
 }
 
 func (h *HomeHandler) login(c *fiber.Ctx) error {
-	component := views.Login()
+	user := h.currentUser(c)
+	component := views.Login(views.LoginProps{User: user})
 	return tadapter.Render(c, component)
 }
 
@@ -116,10 +121,80 @@ func (h *HomeHandler) apiRegister(c *fiber.Ctx) error {
 		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.RegisterResult(false, "Ошибка регистрации"))
 	}
 
+	// Save email in session after successful registration
+	sess, err := h.store.Get(c)
+	if err == nil {
+		sess.Set("email", u.Email)
+		_ = sess.Save()
+	}
+
 	return htmxRender(c.Status(fiber.StatusOK), widgets.RegisterResult(true, fmt.Sprintf("%s", u.Email)))
+}
+
+type loginForm struct {
+	Email    string `form:"email"`
+	Password string `form:"password"`
+}
+
+func (h *HomeHandler) apiLogin(c *fiber.Ctx) error {
+	var form loginForm
+	if err := c.BodyParser(&form); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Некорректные данные формы")
+	}
+
+	errs := validate.Validate(
+		&validators.EmailIsPresent{Field: form.Email, Name: "Email"},
+		&validators.StringLengthInRange{Field: form.Password, Name: "Пароль", Min: 6, Max: 100},
+	)
+	if errs.HasAny() {
+		return c.Status(fiber.StatusUnprocessableEntity).SendString(errs.Error())
+	}
+
+	if h.userService == nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Сервис пользователей не инициализирован")
+	}
+
+	u, err := h.userService.Authenticate(c.UserContext(), form.Email, form.Password)
+	if err != nil {
+		slog.Warn("login failed", slog.String("error", err.Error()))
+		return c.Status(fiber.StatusUnauthorized).SendString("Неверный email или пароль")
+	}
+
+	sess, err := h.store.Get(c)
+	if err != nil {
+		slog.Error("session get failed", slog.String("error", err.Error()))
+		return c.Status(fiber.StatusInternalServerError).SendString("Ошибка сессии")
+	}
+	sess.Set("email", u.Email)
+	if err := sess.Save(); err != nil {
+		slog.Error("session save failed", slog.String("error", err.Error()))
+		return c.Status(fiber.StatusInternalServerError).SendString("Ошибка сессии")
+	}
+
+	return c.SendString("OK")
+}
+
+func (h *HomeHandler) logout(c *fiber.Ctx) error {
+	sess, err := h.store.Get(c)
+	if err == nil {
+		_ = sess.Destroy()
+	}
+	return c.Redirect("/", fiber.StatusSeeOther)
 }
 
 // htmxRender renders a small component suitable for HTMX swaps
 func htmxRender(c *fiber.Ctx, comp templ.Component) error {
 	return tadapter.Render(c, comp)
+}
+
+func (h *HomeHandler) currentUser(c *fiber.Ctx) views.PageUser {
+	email := c.Locals("email").(string)
+	if email == "" || h.userService == nil {
+		return views.PageUser{}
+	}
+	u, err := h.userService.GetByEmail(c.UserContext(), email)
+	if err != nil || u == nil {
+		return views.PageUser{}
+	}
+	return views.PageUser{Email: u.Email, Name: u.Name}
 }

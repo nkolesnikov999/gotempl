@@ -4,13 +4,17 @@ import "nkpro/gotempl/views/components"
 import "nkpro/gotempl/views/layout"
 import "nkpro/gotempl/views/widgets"
 
-templ Register() {
+type RegisterProps struct {
+    User PageUser
+}
+
+templ Register(props RegisterProps) {
 	@layout.Layout(layout.LayoutProps{
 		Title: "Регистрация",
 		MetaDescription: "Страница регистрации",
 	}) {
 		<main>
-			@layout.Header() {
+            @layout.Header(layout.HeaderProps{ Email: props.User.Email, Name: props.User.Name, Avatar: props.User.Avatar }) {
 				@components.Title("Регистрация")
 			}
 			@widgets.RegisterForm()

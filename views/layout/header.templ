@@ -1,9 +1,15 @@
 package layout
 
-templ Header() {
+type HeaderProps struct {
+    Email string
+    Name string
+    Avatar string
+}
+
+templ Header(props HeaderProps) {
 	@HeaderStyle()
 	<div class="header">
-		@Menu()
+        @Menu(MenuProps{ Email: props.Email, Name: props.Name, Avatar: props.Avatar })
 		<div class="header__content">
 			{ children... }
 		</div>

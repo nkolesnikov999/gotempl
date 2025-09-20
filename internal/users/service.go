@@ -10,6 +10,7 @@ import (
 type Service interface {
 	Register(ctx context.Context, name, email, password string) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
+	Authenticate(ctx context.Context, email, password string) (*User, error)
 }
 
 type service struct {
@@ -56,5 +57,20 @@ func (s *service) GetByEmail(ctx context.Context, email string) (*User, error) {
 	if u != nil {
 		u.Password = ""
 	}
+	return u, nil
+}
+
+func (s *service) Authenticate(ctx context.Context, email, password string) (*User, error) {
+	u, err := s.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, fmt.Errorf("authenticate: get by email: %w", err)
+	}
+	if u == nil {
+		return nil, fmt.Errorf("authenticate: invalid credentials")
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)); err != nil {
+		return nil, fmt.Errorf("authenticate: invalid credentials")
+	}
+	u.Password = ""
 	return u, nil
 }

@@ -1,6 +1,12 @@
 package layout
 
-templ Menu() {
+type MenuProps struct {
+    Email string
+    Name  string
+    Avatar string
+}
+
+templ Menu(props MenuProps) {
 	@MenuStyle()
 	<div class="menu">
 		<div class="menu__left">
@@ -18,8 +24,23 @@ templ Menu() {
 				<input class="menu__search-input" placeholder="Найти Новость" />
 				<button class="menu__search-btn" aria-label="Search">🔍</button>
 			</div>
-			<a href="/login" class="menu__link">Вход</a>
-			<a href="/register" class="menu__link">Регистрация</a>
+			if props.Email != "" {
+				<a href="/logout" class="menu__user" title="Выйти">
+					if props.Avatar != "" {
+						<img class="menu__avatar" src={props.Avatar} alt="avatar" />
+					} else {
+						<img class="menu__avatar" src="/public/images/user_1.png" alt="avatar" />
+					}
+					if props.Name != "" {
+						<span class="menu__username">{ props.Name }</span>
+					} else {
+						<span class="menu__username">{ props.Email }</span>
+					}
+				</a>
+			} else {
+				<a href="/login" class="menu__link">Вход</a>
+				<a href="/register" class="menu__link">Регистрация</a>
+			}
 		</div>
 	</div>
 }

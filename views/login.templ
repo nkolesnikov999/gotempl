@@ -4,13 +4,17 @@ import "nkpro/gotempl/views/components"
 import "nkpro/gotempl/views/layout"
 import "nkpro/gotempl/views/widgets"
 
-templ Login() {
+type LoginProps struct {
+    User PageUser
+}
+
+templ Login(props LoginProps) {
 	@layout.Layout(layout.LayoutProps{
 		Title: "Вход",
 		MetaDescription: "Страница входа",
 	}) {
 		<main>
-			@layout.Header() {
+            @layout.Header(layout.HeaderProps{ Email: props.User.Email, Name: props.User.Name, Avatar: props.User.Avatar }) {
 				@components.Title("Вход")
 			}
 			@widgets.LoginForm()
