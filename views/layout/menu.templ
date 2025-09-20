@@ -1,0 +1,78 @@
+package layout
+
+type MenuProps struct {
+    Email string
+    Name  string
+    Avatar string
+}
+
+templ Menu(props MenuProps) {
+	@MenuStyle()
+	<div class="menu">
+		<div class="menu__left">
+			<a href="/" class="menu__brand">
+				<span class="menu__title">Новости</span>
+			</a>
+			<nav class="menu__nav">
+				<a href="#" class="menu__link">Категории</a>
+				<a href="#" class="menu__link">Контакты</a>
+				<a href="#" class="menu__link">О Нас</a>
+			</nav>
+		</div>
+		<div class="menu__actions">
+			<div class="menu__search">
+				<input class="menu__search-input" placeholder="Найти Новость" />
+				<button class="menu__search-btn" aria-label="Search">🔍</button>
+			</div>
+			if props.Email != "" {
+				<a href="/logout" class="menu__user" title="Выйти">
+					if props.Avatar != "" {
+						<img class="menu__avatar" src={props.Avatar} alt="avatar" />
+					} else {
+						<img class="menu__avatar" src="/public/images/user_1.png" alt="avatar" />
+					}
+					if props.Name != "" {
+						<span class="menu__username">{ props.Name }</span>
+					} else {
+						<span class="menu__username">{ props.Email }</span>
+					}
+				</a>
+			} else {
+				<a href="/login" class="menu__link">Вход</a>
+				<a href="/register" class="menu__link">Регистрация</a>
+			}
+		</div>
+	</div>
+}
+
+templ MenuStyle() {
+	<style>
+		.menu {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 16px 0;
+			max-width: 1290px;
+			margin: 0 auto;
+			width: 100%;
+		}
+
+		.menu__left { display: flex; align-items: center; gap: 24px; }
+		.menu__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+		.menu__logo { height: 24px; }
+		.menu__title { color: #FF4D00; font-weight: 700; font-size: 20px; }
+
+		.menu__nav { display: flex; gap: 24px; }
+		.menu__link { color: #2B2B2B; text-decoration: none; font-size: 14px; }
+		.menu__link--active { color: #FF4D00; font-weight: 600; }
+
+		.menu__actions { display: flex; align-items: center; gap: 24px; }
+		.menu__search { display: flex; align-items: center; padding: 6px 10px; border: 1px solid #E9E9E9; border-radius: 12px; gap: 8px; }
+		.menu__search-input { border: none; outline: none; width: 260px; font-size: 14px; }
+		.menu__search-btn { border: none; background: transparent; cursor: pointer; font-size: 16px; }
+
+		.menu__user { display: flex; align-items: center; gap: 8px; }
+		.menu__avatar { width: 28px; height: 28px; border-radius: 50%; }
+		.menu__username { font-size: 14px; color: #2B2B2B; }
+	</style>
+}
