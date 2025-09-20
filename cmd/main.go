@@ -54,14 +54,19 @@ func main() {
 	}
 	defer pool.Close()
 
+	// Session/Storage configuration
+	sessionTTLMinutes := config.GetSessionTTLMinutes()
+	sessionGCSeconds := config.GetSessionGCSeconds()
+
 	storage := postgres.New(postgres.Config{
 		DB:         pool,
 		Table:      "sessions",
 		Reset:      false,
-		GCInterval: 10 * time.Second,
+		GCInterval: time.Duration(sessionGCSeconds) * time.Second,
 	})
 	store := session.New(session.Config{
-		Storage: storage,
+		Storage:    storage,
+		Expiration: time.Duration(sessionTTLMinutes) * time.Minute,
 	})
 
 	// Init repos/services
@@ -82,6 +87,8 @@ func main() {
 
 	appLogger.Info("Server starting",
 		slog.String("port", ":3003"),
+		slog.Int("session_ttl_minutes", sessionTTLMinutes),
+		slog.Int("session_gc_seconds", sessionGCSeconds),
 	)
 
 	app.Listen(":3003")

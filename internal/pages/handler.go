@@ -121,10 +121,19 @@ func (h *HomeHandler) apiRegister(c *fiber.Ctx) error {
 	}
 
 	// Save email in session after successful registration
+	slog.Debug("session: register get start", slog.String("path", c.Path()))
 	sess, err := h.store.Get(c)
 	if err == nil {
+		sid := sess.ID()
+		slog.Debug("session: register get ok", slog.String("id", sid))
 		sess.Set("email", u.Email)
-		_ = sess.Save()
+		if err := sess.Save(); err != nil {
+			slog.Error("session: register save failed", slog.String("id", sid), slog.String("error", err.Error()))
+		} else {
+			slog.Info("session: register save ok", slog.String("id", sid), slog.String("email", u.Email))
+		}
+	} else {
+		slog.Error("session: register get failed", slog.String("error", err.Error()))
 	}
 
 	// HTMX redirect to home on success
@@ -162,16 +171,20 @@ func (h *HomeHandler) apiLogin(c *fiber.Ctx) error {
 		return htmxRender(c.Status(fiber.StatusUnauthorized), widgets.LoginResult(false, "Неверный email или пароль"))
 	}
 
+	slog.Debug("session: login get start", slog.String("path", c.Path()))
 	sess, err := h.store.Get(c)
 	if err != nil {
-		slog.Error("session get failed", slog.String("error", err.Error()))
+		slog.Error("session: login get failed", slog.String("error", err.Error()))
 		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.LoginResult(false, "Ошибка сессии"))
 	}
+	sid := sess.ID()
+	slog.Debug("session: login get ok", slog.String("id", sid))
 	sess.Set("email", u.Email)
 	if err := sess.Save(); err != nil {
-		slog.Error("session save failed", slog.String("error", err.Error()))
+		slog.Error("session: login save failed", slog.String("id", sid), slog.String("error", err.Error()))
 		return htmxRender(c.Status(fiber.StatusInternalServerError), widgets.LoginResult(false, "Ошибка сессии"))
 	}
+	slog.Info("session: login save ok", slog.String("id", sid), slog.String("email", u.Email))
 
 	// HTMX redirect to home on success
 	c.Set("HX-Redirect", "/")
@@ -180,9 +193,17 @@ func (h *HomeHandler) apiLogin(c *fiber.Ctx) error {
 }
 
 func (h *HomeHandler) logout(c *fiber.Ctx) error {
+	slog.Debug("session: logout get start", slog.String("path", c.Path()))
 	sess, err := h.store.Get(c)
 	if err == nil {
-		_ = sess.Destroy()
+		sid := sess.ID()
+		if err := sess.Destroy(); err != nil {
+			slog.Error("session: logout destroy failed", slog.String("id", sid), slog.String("error", err.Error()))
+		} else {
+			slog.Info("session: logout destroy ok", slog.String("id", sid))
+		}
+	} else {
+		slog.Error("session: logout get failed", slog.String("error", err.Error()))
 	}
 	return c.Redirect("/", fiber.StatusSeeOther)
 }
