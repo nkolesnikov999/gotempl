@@ -8,8 +8,11 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "fmt"
 import "nkpro/gotempl/views/components"
 import "nkpro/gotempl/views/layout"
+
+func itoa(i int) string { return fmt.Sprintf("%d", i) }
 
 type PageUser struct {
 	Email  string
@@ -18,7 +21,18 @@ type PageUser struct {
 }
 
 type MainProps struct {
-	User PageUser
+	User      PageUser
+	Popular   []NewsCard
+	Latest    []NewsCard
+	PopPage   int
+	LastPage  int
+	PageSize  int
+	PopTotal  int
+	LastTotal int
+	PopPrev   int
+	PopNext   int
+	LastPrev  int
+	LastNext  int
 }
 
 func Main(props MainProps) templ.Component {
@@ -81,13 +95,13 @@ func Main(props MainProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = components.Categories([]components.Category{
-				{Title: "Еда", Image: "/public/images/Hashtag_food.svg"},
-				{Title: "Животные", Image: "/public/images/Hashtag_animal.svg"},
-				{Title: "Машины", Image: "/public/images/Hashtag_car.svg"},
-				{Title: "Спорт", Image: "/public/images/Hashtag_sport.svg"},
-				{Title: "Музыка", Image: "/public/images/Hashtag_music.svg"},
-				{Title: "Технологии", Image: "/public/images/Hashtag_technology.svg"},
-				{Title: "Прочее", Image: "/public/images/Hashtag_others.svg"},
+				{Title: "Еда", Image: "/public/images/Hashtag_food.svg", Alias: "eda"},
+				{Title: "Животные", Image: "/public/images/Hashtag_animal.svg", Alias: "zhivotnye"},
+				{Title: "Машины", Image: "/public/images/Hashtag_car.svg", Alias: "mashiny"},
+				{Title: "Спорт", Image: "/public/images/Hashtag_sport.svg", Alias: "sport"},
+				{Title: "Музыка", Image: "/public/images/Hashtag_music.svg", Alias: "muzyka"},
+				{Title: "Технологии", Image: "/public/images/Hashtag_technology.svg", Alias: "tehnologii"},
+				{Title: "Прочее", Image: "/public/images/Hashtag_others.svg", Alias: "prochee"},
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -115,21 +129,79 @@ func Main(props MainProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div style=\"margin: 24px auto 40px; max-width: 1290px; display: flex; gap: 24px; flex-wrap: wrap;\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div id=\"popular\" style=\"max-width: 1290px; margin: 24px auto 0;\"><div style=\"display:flex;align-items:center;justify-content:space-between;\"><h2 style=\"margin: 0 0 12px;\">Популярное</h2><div><a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Card(components.CardProps{
-				Image:       "/public/images/card_1.png",
-				Title:       "Открытие сезона байдарок",
-				Description: "Сегодня был открыт сезон путешествия на байдарках, где вы можете поучаствовать в ...",
-				User:        components.CardUser{Name: "Михаил Аршинов", Avatar: "/public/images/user_1.png", Date: "Август 18 , 2025"},
-				Bookmarked:  false,
-			}).Render(ctx, templ_7745c5c3_Buffer)
+			var templ_7745c5c3_Var4 templ.SafeURL
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs("/?pop=" + itoa(props.PopPrev) + "&last=" + itoa(props.LastPage) + "#popular")
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/main.templ`, Line: 69, Col: 110}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"arrow\">‹</a> <a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 templ.SafeURL
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs("/?pop=" + itoa(props.PopNext) + "&last=" + itoa(props.LastPage) + "#popular")
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/main.templ`, Line: 70, Col: 110}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"arrow\">›</a></div></div><div style=\"display: flex; gap: 24px; flex-wrap: nowrap; overflow: hidden;\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, it := range props.Popular {
+				templ_7745c5c3_Err = components.Card(components.CardProps{Image: it.Image, Title: it.Title, Description: it.Description, User: it.User, Bookmarked: false}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></div><div id=\"latest\" style=\"max-width: 1290px; margin: 32px auto 40px;\"><div style=\"display:flex;align-items:center;justify-content:space-between;\"><h2 style=\"margin: 0 0 12px;\">Последние новости</h2><div><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 templ.SafeURL
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs("/?pop=" + itoa(props.PopPage) + "&last=" + itoa(props.LastPrev) + "#latest")
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/main.templ`, Line: 83, Col: 109}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"arrow\">‹</a> <a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 templ.SafeURL
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs("/?pop=" + itoa(props.PopPage) + "&last=" + itoa(props.LastNext) + "#latest")
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/main.templ`, Line: 84, Col: 109}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"arrow\">›</a></div></div><div style=\"display: flex; gap: 24px; flex-wrap: nowrap; overflow: hidden;\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, it := range props.Latest {
+				templ_7745c5c3_Err = components.Card(components.CardProps{Image: it.Image, Title: it.Title, Description: it.Description, User: it.User, Bookmarked: false}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><style>\n                .arrow { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:#f2f2f2; text-decoration:none; color:#333; margin-left:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); }\n            </style>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -137,7 +209,7 @@ func Main(props MainProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</main>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

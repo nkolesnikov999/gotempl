@@ -39,7 +39,7 @@ func Menu(props MenuProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><input class=\"menu__search-input\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" aria-label=\"Search\">🔍</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"menu\"><div class=\"menu__left\"><a href=\"/\" class=\"menu__brand\"><span class=\"menu__title\">Новости</span></a><nav class=\"menu__nav\"><a href=\"#\" class=\"menu__link\">Категории</a> <a href=\"#\" class=\"menu__link\">Контакты</a> <a href=\"#\" class=\"menu__link\">О Нас</a></nav></div><div class=\"menu__actions\"><div class=\"menu__search\"><form method=\"get\" action=\"/search\" style=\"display:flex;align-items:center;gap:8px;\"><input class=\"menu__search-input\" name=\"q\" placeholder=\"Найти Новость\"> <button class=\"menu__search-btn\" type=\"submit\" aria-label=\"Search\">🔍</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -56,7 +56,7 @@ func Menu(props MenuProps) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(props.Avatar)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 30, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 32, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -80,7 +80,7 @@ func Menu(props MenuProps) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 35, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 37, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -98,7 +98,7 @@ func Menu(props MenuProps) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Email)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 37, Col: 48}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout/menu.templ`, Line: 39, Col: 48}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {

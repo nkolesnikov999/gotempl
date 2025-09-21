@@ -11,6 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 type Category struct {
 	Title string
 	Image string
+	Alias string
 }
 
 func Categories(categories []Category) templ.Component {
@@ -43,38 +44,51 @@ func Categories(categories []Category) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, c := range categories {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"#\" class=\"category\"><img src=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(c.Image)
+			var templ_7745c5c3_Var2 templ.SafeURL
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs("/category/" + c.Alias)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/categories.templ`, Line: 13, Col: 33}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/categories.templ`, Line: 13, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"category__bg\"> <span class=\"category__title\">#")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"category\"><img src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(c.Title)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(c.Image)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/categories.templ`, Line: 14, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/categories.templ`, Line: 14, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span></a> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" class=\"category__bg\"> <span class=\"category__title\">#")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(c.Title)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/categories.templ`, Line: 15, Col: 55}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<button class=\"category__more\" aria-label=\"More\">›</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<button class=\"category__more\" aria-label=\"More\">›</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,12 +112,12 @@ func CategoriesStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<style>\n        .categories { display: flex; gap: 16px; align-items: center; padding: 12px 0; overflow-x: auto; justify-content: center; max-width: 1290px; margin: 0 auto; width: 100%; }\n        .category { position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 160px; height: 48px; text-decoration: none; border-radius: 14px; overflow: hidden; }\n        .category__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(1px) brightness(0.9); }\n        .category__title { position: relative; color: #FFFFFF; font-size: 14px; font-weight: 600; background: rgba(0,0,0,0.35); padding: 6px 10px; border-radius: 10px; }\n        .category__more { border: none; background: #F2F2F2; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; font-size: 22px; }\n    </style>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<style>\n        .categories { display: flex; gap: 16px; align-items: center; padding: 12px 0; overflow-x: auto; justify-content: center; max-width: 1290px; margin: 0 auto; width: 100%; }\n        .category { position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 160px; height: 48px; text-decoration: none; border-radius: 14px; overflow: hidden; }\n        .category__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(1px) brightness(0.9); }\n        .category__title { position: relative; color: #FFFFFF; font-size: 14px; font-weight: 600; background: rgba(0,0,0,0.35); padding: 6px 10px; border-radius: 10px; }\n        .category__more { border: none; background: #F2F2F2; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; font-size: 22px; }\n    </style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

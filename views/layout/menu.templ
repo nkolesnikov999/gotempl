@@ -21,8 +21,10 @@ templ Menu(props MenuProps) {
 		</div>
 		<div class="menu__actions">
 			<div class="menu__search">
-				<input class="menu__search-input" placeholder="Найти Новость" />
-				<button class="menu__search-btn" aria-label="Search">🔍</button>
+				<form method="get" action="/search" style="display:flex;align-items:center;gap:8px;">
+					<input class="menu__search-input" name="q" placeholder="Найти Новость" />
+					<button class="menu__search-btn" type="submit" aria-label="Search">🔍</button>
+				</form>
 			</div>
 			if props.Email != "" {
 				<a href="/logout" class="menu__user" title="Выйти">

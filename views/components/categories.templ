@@ -3,13 +3,14 @@ package components
 type Category struct {
     Title string
     Image string
+    Alias string
 }
 
 templ Categories(categories []Category) {
     @CategoriesStyle()
     <div class="categories">
         for _, c := range categories {
-            <a href="#" class="category">
+            <a href={"/category/" + c.Alias} class="category">
                 <img src={c.Image} class="category__bg" />
                 <span class="category__title">#{c.Title}</span>
             </a>

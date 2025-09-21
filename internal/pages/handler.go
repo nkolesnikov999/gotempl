@@ -3,9 +3,11 @@ package pages
 import (
 	"log/slog"
 
+	"nkpro/gotempl/internal/news"
 	"nkpro/gotempl/internal/users"
 	"nkpro/gotempl/pkg/tadapter"
 	"nkpro/gotempl/views"
+	"nkpro/gotempl/views/components"
 	"nkpro/gotempl/views/widgets"
 
 	"github.com/a-h/templ"
@@ -19,6 +21,7 @@ type HomeHandler struct {
 	router      fiber.Router
 	store       *session.Store
 	userService users.Service
+	newsService news.Service
 }
 
 type Option func(*HomeHandler)
@@ -27,6 +30,10 @@ func WithUserService(s users.Service) Option {
 	return func(h *HomeHandler) {
 		h.userService = s
 	}
+}
+
+func WithNewsService(s news.Service) Option {
+	return func(h *HomeHandler) { h.newsService = s }
 }
 
 func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
@@ -38,6 +45,8 @@ func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
 		opt(h)
 	}
 	h.router.Get("/", h.home)
+	h.router.Get("/category/:alias", h.category)
+	h.router.Get("/search", h.search)
 	h.router.Get("/register", h.register)
 	h.router.Get("/login", h.login)
 	h.router.Get("/404", h.notFound)
@@ -64,8 +73,123 @@ func (h *HomeHandler) home(c *fiber.Ctx) error {
 	)
 
 	user := h.currentUser(c)
-	component := views.Main(views.MainProps{User: user})
+	popPage := c.QueryInt("pop", 1)
+	lastPage := c.QueryInt("last", 1)
+	if popPage < 1 {
+		popPage = 1
+	}
+	if lastPage < 1 {
+		lastPage = 1
+	}
+	limit := 4
+	var popularRes, latestRes news.SearchResult
+	if h.newsService != nil {
+		popularRes, _ = h.newsService.Search(c.UserContext(), news.SearchParams{Limit: limit, Offset: (popPage - 1) * limit, Sort: "popular"})
+		latestRes, _ = h.newsService.Search(c.UserContext(), news.SearchParams{Limit: limit, Offset: (lastPage - 1) * limit, Sort: "latest"})
+	}
+	popTotalPages := int((popularRes.Total + int64(limit) - 1) / int64(limit))
+	lastTotalPages := int((latestRes.Total + int64(limit) - 1) / int64(limit))
+	popPrev := popPage - 1
+	if popPrev < 1 {
+		popPrev = 1
+	}
+	popNext := popPage + 1
+	if popNext > popTotalPages {
+		popNext = popTotalPages
+	}
+	lastPrev := lastPage - 1
+	if lastPrev < 1 {
+		lastPrev = 1
+	}
+	lastNext := lastPage + 1
+	if lastNext > lastTotalPages {
+		lastNext = lastTotalPages
+	}
+	component := views.Main(views.MainProps{
+		User:      user,
+		Popular:   toNewsCards(popularRes.Items),
+		Latest:    toNewsCards(latestRes.Items),
+		PopPage:   popPage,
+		LastPage:  lastPage,
+		PageSize:  limit,
+		PopTotal:  int(popularRes.Total),
+		LastTotal: int(latestRes.Total),
+		PopPrev:   popPrev,
+		PopNext:   popNext,
+		LastPrev:  lastPrev,
+		LastNext:  lastNext,
+	})
 	return tadapter.Render(c, component)
+}
+
+func (h *HomeHandler) category(c *fiber.Ctx) error {
+	alias := c.Params("alias")
+	q := c.Query("q")
+	page := c.QueryInt("page", 1)
+	if page < 1 {
+		page = 1
+	}
+	limit := 12
+	offset := (page - 1) * limit
+	var items []views.NewsCard
+	total := 0
+	if h.newsService != nil {
+		res, _ := h.newsService.Search(c.UserContext(), news.SearchParams{Limit: limit, Offset: offset, Category: alias, Keyword: q, Sort: "latest"})
+		items = toNewsCards(res.Items)
+		total = int(res.Total)
+	}
+	component := views.CategoryPage(views.CategoryPageProps{
+		User:     h.currentUser(c),
+		Category: alias,
+		Query:    q,
+		Items:    items,
+		Page:     page,
+		PageSize: limit,
+		Total:    total,
+	})
+	return tadapter.Render(c, component)
+}
+
+func (h *HomeHandler) search(c *fiber.Ctx) error {
+	q := c.Query("q")
+	page := c.QueryInt("page", 1)
+	if page < 1 {
+		page = 1
+	}
+	limit := 12
+	offset := (page - 1) * limit
+	var items []views.NewsCard
+	total := 0
+	if h.newsService != nil {
+		res, _ := h.newsService.Search(c.UserContext(), news.SearchParams{Limit: limit, Offset: offset, Keyword: q, Sort: "latest"})
+		items = toNewsCards(res.Items)
+		total = int(res.Total)
+	}
+	// Reuse CategoryPage view with pseudo category name 'Поиск'
+	component := views.CategoryPage(views.CategoryPageProps{
+		User:     h.currentUser(c),
+		Category: "Поиск",
+		Query:    q,
+		Items:    items,
+		Page:     page,
+		PageSize: limit,
+		Total:    total,
+	})
+	return tadapter.Render(c, component)
+}
+
+func toNewsCards(items []news.Item) []views.NewsCard {
+	res := make([]views.NewsCard, 0, len(items))
+	for _, it := range items {
+		res = append(res, views.NewsCard{
+			Image:       "/public/images/card_1.png",
+			Title:       it.Title,
+			Description: it.Preview,
+			User:        components.CardUser{Name: it.Author, Avatar: "/public/images/user_1.png", Date: it.CreatedAt.Format("Jan 02, 2006")},
+			Alias:       it.Alias,
+		})
+	}
+	return res
 }
 
 func (h *HomeHandler) register(c *fiber.Ctx) error {

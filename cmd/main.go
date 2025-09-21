@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"nkpro/gotempl/config"
+	"nkpro/gotempl/internal/news"
 	"nkpro/gotempl/internal/pages"
 	"nkpro/gotempl/internal/users"
 	dbpkg "nkpro/gotempl/pkg/db"
@@ -72,6 +73,8 @@ func main() {
 	// Init repos/services
 	userRepo := users.NewPgxRepository(pool)
 	userService := users.NewService(userRepo)
+	newsRepo := news.NewPgxRepository(pool)
+	newsService := news.NewService(newsRepo)
 
 	app := fiber.New()
 
@@ -83,7 +86,7 @@ func main() {
 	app.Static("/public", "./public")
 
 	// Initialize page handlers
-	pages.NewHandler(app, store, pages.WithUserService(userService))
+	pages.NewHandler(app, store, pages.WithUserService(userService), pages.WithNewsService(newsService))
 
 	appLogger.Info("Server starting",
 		slog.String("port", ":3003"),
