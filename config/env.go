@@ -83,3 +83,14 @@ func GetLogFormat() string {
 	}
 	return format
 }
+
+// Session configuration
+// GetSessionTTLMinutes returns session TTL in minutes
+func GetSessionTTLMinutes() int {
+	return getInt("SESSION_TTL_MINUTES", 120)
+}
+
+// GetSessionGCSeconds returns storage GC interval in seconds
+func GetSessionGCSeconds() int {
+	return getInt("SESSION_GC_SECONDS", 60)
+}

@@ -1,0 +1,46 @@
+package components
+
+import "fmt"
+
+type PaginationProps struct {
+    Page int
+    PageSize int
+    Total int
+    BaseURL string
+    Query string
+}
+
+templ Pagination(p PaginationProps) {
+    @PaginationStyle()
+    if totalPages(p) > 1 {
+        <nav class="pagination" aria-label="Навигация по страницам">
+            <a class="pagination__btn" href={p.BaseURL + "?page=" + itoa(prevPage(p)) + concatQuery(p.Query)}>‹</a>
+            for i := 1; i <= totalPages(p); i++ {
+                <a class={pageClass(i, p.Page)} href={p.BaseURL + "?page=" + itoa(i) + concatQuery(p.Query)}>{itoa(i)}</a>
+            }
+            <a class="pagination__btn" href={p.BaseURL + "?page=" + itoa(nextPage(p)) + concatQuery(p.Query)}>›</a>
+        </nav>
+    }
+}
+
+func itoa(i int) string { return fmt.Sprintf("%d", i) }
+
+func concatQuery(q string) string {
+    if q == "" { return "" }
+    return "&q=" + q
+}
+
+func totalPages(p PaginationProps) int { return (p.Total + p.PageSize - 1) / p.PageSize }
+func prevPage(p PaginationProps) int { pg := p.Page - 1; if pg < 1 { pg = 1 }; return pg }
+func nextPage(p PaginationProps) int { tp := totalPages(p); pg := p.Page + 1; if pg > tp { pg = tp }; return pg }
+func pageClass(i, current int) string { if i == current { return "pagination__page is-active" }; return "pagination__page" }
+
+templ PaginationStyle() {
+    <style>
+        .pagination { display:flex; gap:8px; justify-content:center; margin: 12px auto 40px; }
+        .pagination__page, .pagination__btn { text-decoration:none; padding:8px 12px; border-radius:8px; background:#f3f4f6; color:#141414; }
+        .pagination__page.is-active { background:#141414; color:#fff; }
+    </style>
+}
+
+
