@@ -1,0 +1,23 @@
+package views
+
+import "nkpro/gotempl/views/components"
+import "nkpro/gotempl/views/layout"
+
+templ CategoryPage(props CategoryPageProps) {
+    @layout.Layout(layout.LayoutProps{ Title: "Категория", MetaDescription: "Новости категории" }) {
+        <main>
+            @layout.Header(layout.HeaderProps{ Email: props.User.Email, Name: props.User.Name, Avatar: props.User.Avatar }) {
+                @components.Title("#" + props.Category)
+            }
+            <div style="max-width:1290px;margin:16px auto 24px;display:flex;gap:24px;flex-wrap:wrap;">
+                for _, it := range props.Items {
+                    @components.Card(components.CardProps{ Image: it.Image, Title: it.Title, Description: it.Description, User: it.User })
+                }
+            </div>
+            @components.Pagination(components.PaginationProps{Page: props.Page, PageSize: props.PageSize, Total: props.Total, BaseURL: "/category/" + props.Category, Query: props.Query })
+            @layout.Footer()
+        </main>
+    }
+}
+
+

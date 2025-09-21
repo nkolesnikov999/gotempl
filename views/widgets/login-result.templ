@@ -1,0 +1,18 @@
+package widgets
+
+templ LoginResult(ok bool, msg string) {
+	@LoginResultStyle()
+	if ok {
+		<div class="login-result login-result--ok">{ msg }</div>
+	} else {
+		<div class="login-result login-result--err">{ msg }</div>
+	}
+}
+
+templ LoginResultStyle() {
+	<style>
+		.login-result { padding: 12px 14px; border-radius: 10px; font-size: 14px; }
+		.login-result--ok { background: #e7f8ee; color: #146c43; }
+		.login-result--err { background: #fde7ea; color: #842029; }
+	</style>
+}

@@ -1,0 +1,30 @@
+package components
+
+type BannerProps struct {
+	Image       string
+	Alt         string
+	Title       string
+	Description string
+}
+
+templ Banner(p BannerProps) {
+	@BannerStyle()
+	<section class="banner">
+		<img class="banner__image" src={p.Image} alt={p.Alt} />
+		<div class="banner__card">
+			<h3 class="banner__title">{p.Title}</h3>
+			<p class="banner__desc">{p.Description}</p>
+		</div>
+	</section>
+}
+
+templ BannerStyle() {
+	<style>
+		.banner { position: relative; width: 360px; height: 452px; margin: 0; }
+		.banner__image { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block; }
+		.banner__card { position: absolute; left: 16px; right: 16px; bottom: 16px; background: rgba(255,255,255,0.92); border-radius: 18px; padding: 18px 20px; box-shadow: 0 8px 0 rgba(0,0,0,0.2); backdrop-filter: blur(6px); }
+		.banner__title { margin: 0 0 8px; font-weight: 800; font-size: 26px; line-height: 1.2; color: #141414; }
+		.banner__desc { margin: 0; font-size: 14px; line-height: 1.45; color: #6b6b6b; }
+		
+	</style>
+}
