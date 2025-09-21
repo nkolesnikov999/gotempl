@@ -1,0 +1,28 @@
+package views
+
+import "nkpro/gotempl/views/layout"
+
+type CreateNewsProps struct { User PageUser }
+
+templ CreateNewsPage(props CreateNewsProps) {
+    @layout.Layout(layout.LayoutProps{ Title: "Создание новости", MetaDescription: "Создать новость" }) {
+        <main>
+            @layout.Header(layout.HeaderProps{ Email: props.User.Email, Name: props.User.Name, Avatar: props.User.Avatar }) {
+                <h2 style="max-width:1290px;margin:16px auto 0;">Создание новости</h2>
+            }
+            <form method="post" action="/news/create" style="max-width: 800px; margin: 24px auto; display: flex; flex-direction: column; gap: 18px;">
+                <label>Заголовок</label>
+                <input type="text" name="title" style="height: 48px; border-radius: 12px; background: #f4f4f4; border: none; padding: 0 16px;" />
+                <label>Превью</label>
+                <textarea name="preview" style="min-height: 120px; border-radius: 12px; background: #f4f4f4; border: none; padding: 16px;"></textarea>
+                <label>Текст</label>
+                <textarea name="content" style="min-height: 220px; border-radius: 12px; background: #f4f4f4; border: none; padding: 16px;"></textarea>
+                <div style="display:flex;justify-content:center;">
+                    <button type="submit" style="padding: 12px 18px; background:#ff4d63; color:#fff; border:none; border-radius:12px;">Создать новость</button>
+                </div>
+            </form>
+        </main>
+    }
+}
+
+

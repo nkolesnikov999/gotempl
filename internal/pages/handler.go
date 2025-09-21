@@ -47,6 +47,8 @@ func NewHandler(router fiber.Router, store *session.Store, opts ...Option) {
 	h.router.Get("/", h.home)
 	h.router.Get("/category/:alias", h.category)
 	h.router.Get("/search", h.search)
+	h.router.Get("/news/create", h.createNewsForm)
+	h.router.Post("/news/create", h.createNews)
 	h.router.Get("/register", h.register)
 	h.router.Get("/login", h.login)
 	h.router.Get("/404", h.notFound)
@@ -176,6 +178,45 @@ func (h *HomeHandler) search(c *fiber.Ctx) error {
 		Total:    total,
 	})
 	return tadapter.Render(c, component)
+}
+
+func (h *HomeHandler) createNewsForm(c *fiber.Ctx) error {
+	email := c.Locals("email").(string)
+	if email == "" {
+		return c.Redirect("/login", fiber.StatusSeeOther)
+	}
+	component := views.CreateNewsPage(views.CreateNewsProps{User: h.currentUser(c)})
+	return tadapter.Render(c, component)
+}
+
+type createNewsFormData struct {
+	Title   string `form:"title"`
+	Preview string `form:"preview"`
+	Content string `form:"content"`
+}
+
+func (h *HomeHandler) createNews(c *fiber.Ctx) error {
+	email := c.Locals("email").(string)
+	if email == "" {
+		return c.Redirect("/login", fiber.StatusSeeOther)
+	}
+	if h.userService == nil || h.newsService == nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+	user, err := h.userService.GetByEmail(c.UserContext(), email)
+	if err != nil || user == nil {
+		return c.Redirect("/login", fiber.StatusSeeOther)
+	}
+
+	var form createNewsFormData
+	if err := c.BodyParser(&form); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("bad form")
+	}
+	_, err = h.newsService.Create(c.UserContext(), form.Title, form.Preview, form.Content, user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("create failed")
+	}
+	return c.Redirect("/", fiber.StatusSeeOther)
 }
 
 func toNewsCards(items []news.Item) []views.NewsCard {

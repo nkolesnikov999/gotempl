@@ -2,10 +2,12 @@ package news
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -122,6 +124,39 @@ func (r *PgxRepository) GetLatest(ctx context.Context, limit int) ([]Item, error
 	}
 	defer rows.Close()
 	return r.scanItems(ctx, rows)
+}
+
+func (r *PgxRepository) Create(ctx context.Context, title, preview, content string, userID int64, alias string, categories []int64) (*Item, error) {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("begin tx: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	const ins = `INSERT INTO news (title, alias, preview, content, user_id)
+                 VALUES ($1,$2,$3,$4,$5)
+                 RETURNING id, title, alias, preview, content, user_id, createdat, views`
+	var it Item
+	if err := tx.QueryRow(ctx, ins, title, alias, preview, content, userID).
+		Scan(&it.ID, &it.Title, &it.Alias, &it.Preview, &it.Content, &it.AuthorID, &it.CreatedAt, &it.Views); err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			return nil, fmt.Errorf("insert news pg: %s %s", pgErr.Code, pgErr.Message)
+		}
+		return nil, fmt.Errorf("insert news: %w", err)
+	}
+
+	for _, cid := range categories {
+		if _, err := tx.Exec(ctx, `INSERT INTO news_categories(news_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`, it.ID, cid); err != nil {
+			return nil, fmt.Errorf("link category: %w", err)
+		}
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return nil, fmt.Errorf("commit: %w", err)
+	}
+	it.Categories, _ = r.getCategories(ctx, it.ID)
+	return &it, nil
 }
 
 func (r *PgxRepository) scanItems(ctx context.Context, rows pgx.Rows) ([]Item, error) {
