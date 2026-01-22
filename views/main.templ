@@ -1,0 +1,27 @@
+package views
+
+import "nkpro/gotempl/views/components"
+import "nkpro/gotempl/views/layout"
+
+templ Main() {
+	@layout.Layout(layout.LayoutProps{
+		Title: "Новости",
+		MetaDescription: "Лента новостей",
+	}) {
+		<main>
+			@layout.Header() {
+				@components.Title("Новости")
+			}
+			@components.Categories([]components.Category{
+				{Title: "Еда", Image: "/public/images/Hashtag_food.svg"},
+				{Title: "Животные", Image: "/public/images/Hashtag_animal.svg"},
+				{Title: "Машины", Image: "/public/images/Hashtag_car.svg"},
+				{Title: "Спорт", Image: "/public/images/Hashtag_sport.svg"},
+				{Title: "Музыка", Image: "/public/images/Hashtag_music.svg"},
+				{Title: "Технологии", Image: "/public/images/Hashtag_technology.svg"},
+				{Title: "Прочее", Image: "/public/images/Hashtag_others.svg"},
+			})
+			@layout.Footer()
+		</main>
+	}
+}

@@ -43,6 +43,8 @@ func main() {
 	// Add slog-fiber middleware for HTTP request logging
 	app.Use(slogfiber.New(appLogger.Logger))
 
+	app.Static("/public", "./public")
+
 	// Initialize page handlers
 	pages.NewHandler(app)
 
